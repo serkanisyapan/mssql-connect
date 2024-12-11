@@ -1,0 +1,5 @@
+DB_USER=yourusername
+USER_PASSWORD=yourpassword
+SERVER_NAME=servername
+DB_NAME=dbname
+DB_PORT=serverport
