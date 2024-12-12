@@ -68,7 +68,7 @@ function DetayTablo() {
     if (detayRaporu.length === 0) return
     const getColDefs = (detayRaporu) => {
         const firstEntry = detayRaporu[0];
-        return Object.keys(firstEntry).map(key => ({field: key}))
+        return Object.keys(firstEntry).map(key => ({field: key, filter: true}))
     }
     const newColDef = getColDefs(detayRaporu)
     setColDefs(newColDef)
@@ -116,7 +116,16 @@ function DetayTablo() {
           </select>
         </div>
         <h2>{raporName}</h2>
-        {detayRaporu.length > 0 && <div style={{height: 600}}><AgGridReact rowData={detayRaporu} columnDefs={colDefs}/></div>}
+        {detayRaporu.length > 0 && 
+        <div style={{height: 600}}>
+          <AgGridReact 
+            pagination={true}
+            paginationPageSize={50}
+            paginationPageSizeSelector={[50, 100, 200]}
+            rowData={detayRaporu} 
+            columnDefs={colDefs}
+          />
+        </div>}
     </>
   )}
 
