@@ -60,8 +60,8 @@ const butonlar = [
 function DetayTablo() {
   const [detayRaporu, setDetayRaporu] = useState([]);
   const [raporName, setRaporName] = useState('')
+  const [loading, setLoading] = useState(false)
   const [colDefs, setColDefs] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
 
 
   useEffect(() => {
@@ -75,7 +75,7 @@ function DetayTablo() {
   }, [detayRaporu])
 
   const fetchDetayRaporu = async (raporTipi) => {
-    setIsLoading(true)
+    setLoading(true)
     const url = `http://localhost:8000/detayraporlari?rapor=${raporTipi}`;
     try {
       const response = await fetch(url);
@@ -84,22 +84,37 @@ function DetayTablo() {
       }
       const json = await response.json();
       setDetayRaporu(json.recordset);
-      setIsLoading(false)
+      setLoading(false)
     } catch(error) {
       console.log(error.message);
-      setIsLoading(false)
     }}
+
+  
+  const handleRaporSec = (event) => {
+    const secilenRapor = event.target.value
+    const getRaporName = butonlar.find(buton => buton.sorgu === secilenRapor)
+    fetchDetayRaporu(secilenRapor)
+    setRaporName(getRaporName.butonAdi)
+  }
       
   return (
     <>
-      <div style={{display: "flex", gap: "5px", flexFlow: "row wrap", justifyContent: "center"}}>
-        {butonlar.map((buton, id) => (
-          <button style={{width: "170px"}} disabled={isLoading || raporName === buton.butonAdi} key={id} onClick={() => {
-            fetchDetayRaporu(`${buton.sorgu}`)
-            setRaporName(buton.butonAdi)
-          }}>{buton.butonAdi}</button>
-        ))}
-      </div>
+        <div>
+          <select
+            disabled={loading}
+            defaultValue={""}
+            onChange={(event) => handleRaporSec(event)}
+          >
+            <option value="" disabled>
+              Rapor seçin 
+            </option>
+            {butonlar.map((buton, index) => (
+              <option key={index} value={buton.sorgu}>
+                {buton.butonAdi}
+              </option>
+            ))}
+          </select>
+        </div>
         <h2>{raporName}</h2>
         {detayRaporu.length > 0 && <div style={{height: 600}}><AgGridReact rowData={detayRaporu} columnDefs={colDefs}/></div>}
     </>
