@@ -75,9 +75,9 @@ function App() {
       
   return (
     <>
-      <div style={{display: "flex", gap: "5px"}}>
+      <div style={{display: "flex", gap: "5px", flexFlow: "row wrap", justifyContent: "center"}}>
         {butonlar.map((buton, id) => (
-          <button disabled={isLoading} key={id} onClick={() => {
+          <button style={{width: "170px"}} disabled={isLoading || raporName === buton.butonAdi} key={id} onClick={() => {
             fetchDetayRaporu(`${buton.sorgu}`)
             setRaporName(buton.butonAdi)
           }}>{buton.butonAdi}</button>
