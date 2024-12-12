@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import sql from "mssql";
-import { sevkIrsaliyeQuery } from "../server/queries.js"
+import { raporlar } from "./queries.js";
 
 const app = express();
 const dbConfig = {
@@ -20,14 +20,14 @@ const appPool = new sql.ConnectionPool(dbConfig);
 
 app.use(cors());
 
-app.get('/sevkirsaliyesi', (req, res) => {
-    req.app.locals.db.query(sevkIrsaliyeQuery, function(err, recordset) {
+app.get('/detayraporlari', (req, res) => {
+    const rapor = raporlar[req.query.rapor]
+    req.app.locals.db.query(rapor, function(err, recordset) {
     if (err) {
       console.error(err)
       res.status(500).send('something went wrong...')
       return
     }
-    console.log(recordset)
     return res.json(recordset)
   })
 })

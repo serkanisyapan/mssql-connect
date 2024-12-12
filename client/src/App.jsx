@@ -1,11 +1,34 @@
 import { useState } from 'react';
 import './App.css'
 
+const butonlar = [
+  {
+    butonAdi: "Sevk Irsaliyesi Detay Raporu",
+    sorgu: "sevkIrsaliye"
+  },
+  {
+    butonAdi: "Açık Sipariş Detay Raporu",
+    sorgu: "acikSiparis"
+  },
+  {
+    butonAdi: "Satın Alma Detay Raporu",
+    sorgu: "satinAlmaDetay"
+  },
+  {
+    butonAdi: "Teklif Detay Raporu",
+    sorgu: "teklifDetay"
+  },
+  {
+    butonAdi: "Mal Alım Detay Raporu",
+    sorgu: "malAlimDetay"
+  }
+]
+
 function App() {
   const [detayRaporu, setDetayRaporu] = useState([]);
 
   const fetchDetayRaporu = async (raporTipi) => {
-    const url = `http://localhost:8000/${raporTipi}`;
+    const url = `http://localhost:8000/detayraporlari?rapor=${raporTipi}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
@@ -19,6 +42,11 @@ function App() {
       
   return (
     <>
+      <div style={{display: "flex", gap: "5px"}}>
+        {butonlar.map((buton, id) => (
+          <button key={id} onClick={() => fetchDetayRaporu(`${buton.sorgu}`)}>{buton.butonAdi}</button>
+        ))}
+      </div>
       <div className='table-container'>
         <table className='styled-table'>
           <thead>
@@ -38,10 +66,6 @@ function App() {
             ))}
           </tbody>
         </table>
-      </div>
-      <div style={{display: "flex", gap: "5px"}}>
-        <button onClick={() => fetchDetayRaporu("sevkirsaliyesi")}>Sevk Irsaliyesi Detay Raporu</button>
-        <button onClick={() => fetchDetayRaporu("aciksiparis")}>Acik Siparis Detay Raporu</button>
       </div>
     </>
   )}
