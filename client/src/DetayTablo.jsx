@@ -1,7 +1,7 @@
-
 import { useEffect, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
+import './App.css'
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -57,7 +57,7 @@ const butonlar = [
   },
 ]
 
-function NewTable() {
+function DetayTablo() {
   const [detayRaporu, setDetayRaporu] = useState([]);
   const [raporName, setRaporName] = useState('')
   const [colDefs, setColDefs] = useState([])
@@ -101,8 +101,8 @@ function NewTable() {
         ))}
       </div>
         <h2>{raporName}</h2>
-        {detayRaporu.length > 0 && <div style={{height: 500}}><AgGridReact rowData={detayRaporu} columnDefs={colDefs}/></div>}
+        {detayRaporu.length > 0 && <div style={{height: 600}}><AgGridReact rowData={detayRaporu} columnDefs={colDefs}/></div>}
     </>
   )}
 
-export default NewTable
+export default DetayTablo
