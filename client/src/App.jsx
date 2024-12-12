@@ -3,8 +3,8 @@ import './App.css'
 
 const butonlar = [
   {
-    butonAdi: "Sevk Irsaliyesi Detay Raporu",
-    sorgu: "sevkIrsaliye"
+    butonAdi: "Sevk Fiş Detayları Raporu",
+    sorgu: "sevkFis"
   },
   {
     butonAdi: "Açık Sipariş Detay Raporu",
@@ -19,15 +19,46 @@ const butonlar = [
     sorgu: "teklifDetay"
   },
   {
-    butonAdi: "Mal Alım Detay Raporu",
-    sorgu: "malAlimDetay"
-  }
+    butonAdi: "Mal Alım Fiş Detayları Raporu",
+    sorgu: "malAlimFisDetay"
+  },
+  {
+    butonAdi: "Açık Siparişler Özet Raporu",
+    sorgu: "acikSiparisOzet"
+  },
+  {
+    butonAdi: "Bütün Siparişler Özet Raporu",
+    sorgu: "butunSiparisOzet"
+  },
+  {
+    butonAdi: "Teklifler",
+    sorgu: "teklifler"
+  },
+  {
+    butonAdi: "Stok Kartları Raporu",
+    sorgu: "stokKartlari"
+  },
+  {
+    butonAdi: "Ön Maliyet Çalışmaları",
+    sorgu: "onMaliyet"
+  },
+  {
+    butonAdi: "Kayra İş Emri Raporu",
+    sorgu: "kayraIsEmri"
+  },
+  {
+    butonAdi: "Kayra Kesilen e-irsaliyeler",
+    sorgu: "kayraEIrsaliye"
+  },
 ]
 
 function App() {
   const [detayRaporu, setDetayRaporu] = useState([]);
+  const [raporName, setRaporName] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const fetchDetayRaporu = async (raporTipi) => {
+    setIsLoading(true)
     const url = `http://localhost:8000/detayraporlari?rapor=${raporTipi}`;
     try {
       const response = await fetch(url);
@@ -36,18 +67,24 @@ function App() {
       }
       const json = await response.json();
       setDetayRaporu(json.recordset);
+      setIsLoading(false)
     } catch(error) {
       console.log(error.message);
+      setIsLoading(false)
     }}
       
   return (
     <>
       <div style={{display: "flex", gap: "5px"}}>
         {butonlar.map((buton, id) => (
-          <button key={id} onClick={() => fetchDetayRaporu(`${buton.sorgu}`)}>{buton.butonAdi}</button>
+          <button disabled={isLoading} key={id} onClick={() => {
+            fetchDetayRaporu(`${buton.sorgu}`)
+            setRaporName(buton.butonAdi)
+          }}>{buton.butonAdi}</button>
         ))}
       </div>
       <div className='table-container'>
+        <h2>{raporName}</h2>
         <table className='styled-table'>
           <thead>
             <tr>
