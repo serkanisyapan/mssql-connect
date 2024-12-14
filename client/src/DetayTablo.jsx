@@ -83,27 +83,21 @@ function DetayTablo() {
         throw new Error(`Response status: ${response.status}`);
       }
       const json = await response.json();
+      const getRaporName = butonlar.find(buton => buton.sorgu === raporTipi)
       setDetayRaporu(json.recordset);
+      setRaporName(getRaporName.butonAdi)
       setLoading(false)
     } catch(error) {
       console.log(error.message);
     }}
 
-  
-  const handleRaporSec = (event) => {
-    const secilenRapor = event.target.value
-    const getRaporName = butonlar.find(buton => buton.sorgu === secilenRapor)
-    fetchDetayRaporu(secilenRapor)
-    setRaporName(getRaporName.butonAdi)
-  }
-      
   return (
     <>
         <div>
           <select
             disabled={loading}
             defaultValue={""}
-            onChange={(event) => handleRaporSec(event)}
+            onChange={(event) => fetchDetayRaporu(event.target.value)}
           >
             <option value="" disabled>
               Rapor seçin 
