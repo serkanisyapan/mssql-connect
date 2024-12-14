@@ -60,9 +60,9 @@ const butonlar = [
 function DetayTablo() {
   const [detayRaporu, setDetayRaporu] = useState([]);
   const [raporName, setRaporName] = useState('')
+  const [cachedRapor, setCachedRapor] = useState({})
   const [loading, setLoading] = useState(false)
   const [colDefs, setColDefs] = useState([])
-
 
   useEffect(() => {
     if (detayRaporu.length === 0) return
@@ -85,11 +85,16 @@ function DetayTablo() {
       const json = await response.json();
       const getRaporName = butonlar.find(buton => buton.sorgu === raporTipi)
       setDetayRaporu(json.recordset);
+      cacheRapor(json.recordset, raporTipi)
       setRaporName(getRaporName.butonAdi)
       setLoading(false)
     } catch(error) {
       console.log(error.message);
     }}
+
+  const cacheRapor = (fetchedRapor, raporTipi) => {
+    setCachedRapor((prevCache) => ({...prevCache, [raporTipi]: fetchedRapor}))
+  }
 
   return (
     <>
@@ -97,7 +102,13 @@ function DetayTablo() {
           <select
             disabled={loading}
             defaultValue={""}
-            onChange={(event) => fetchDetayRaporu(event.target.value)}
+            onChange={(event) => {
+              if (cachedRapor[event.target.value]) {
+                setDetayRaporu(cachedRapor[event.target.value])
+                return;
+              }
+              fetchDetayRaporu(event.target.value)
+            }}
           >
             <option value="" disabled>
               Rapor seçin 
