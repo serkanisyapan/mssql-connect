@@ -127,6 +127,8 @@ function DetayTablo() {
             pagination={true}
             paginationPageSize={50}
             paginationPageSizeSelector={[50, 100, 200]}
+            animateRows={false}
+            enableCellTextSelection={true}
             rowData={detayRaporu} 
             columnDefs={colDefs}
           />
