@@ -3,6 +3,7 @@ import { utils, writeFile } from "xlsx"
 import { AgGridReact } from 'ag-grid-react';
 import { AllCommunityModule, CsvExportModule, ModuleRegistry } from 'ag-grid-community'; 
 import './App.css'
+import { ExportButtonSVG } from './ExportButtonSVG';
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule, CsvExportModule]);
@@ -135,8 +136,10 @@ function DetayTablo() {
             ))}
           </select>
         </div>
-        <h2>{raporName}</h2>
-        <button onClick={() => getFilteredData()}>Rapour İndir</button>
+        <div style={{display: "flex", gap: "10px", justifyContent: "center", alignItems: "center"}}>
+          <h2>{raporName}</h2>
+          {raporName && <button className={"rapor-button"} onClick={() => getFilteredData()}><ExportButtonSVG/> ({raporName}.xlsx)</button>}
+        </div>
         {detayRaporu.length > 0 && 
         <div style={{height: 600}}>
           <AgGridReact 
