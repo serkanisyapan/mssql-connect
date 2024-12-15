@@ -3,6 +3,8 @@ import cors from "cors";
 import sql from "mssql";
 import { raporlar } from "./queries.js";
 
+const PORT = process.env.SERVER_PORT;
+const HOST = process.env.SERVER_HOST;
 const app = express();
 const dbConfig = {
     user: process.env.DB_USER,
@@ -44,6 +46,6 @@ appPool.connect().then(function(pool) {
   console.error('Error creating connection pool', err)
 });
 
-app.listen(8000, (req, res) => {
-    console.log('up and running...')
+app.listen(PORT, HOST, (req, res) => {
+    console.log(`server running on port: ${PORT} and host: ${HOST}`)
 })
