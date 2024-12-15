@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { utils, writeFile } from "xlsx"
 import { AgGridReact } from 'ag-grid-react';
-import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'; 
+import { AllCommunityModule, CsvExportModule, ModuleRegistry } from 'ag-grid-community'; 
 import './App.css'
 
 // Register all Community features
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules([AllCommunityModule, CsvExportModule]);
 
 const butonlar = [
   {
@@ -58,6 +59,7 @@ const butonlar = [
 ]
 
 function DetayTablo() {
+  const gridRef = useRef(null)
   const [detayRaporu, setDetayRaporu] = useState([]);
   const [raporName, setRaporName] = useState('')
   const [cachedRapor, setCachedRapor] = useState({})
@@ -96,6 +98,19 @@ function DetayTablo() {
     setCachedRapor((prevCache) => ({...prevCache, [raporTipi]: fetchedRapor}))
   }
 
+  const exportExcelFile = (data, name) => {
+    const worksheet = utils.json_to_sheet(data)
+    const workbook = utils.book_new()
+    utils.book_append_sheet(workbook, worksheet, "Rapor")
+    writeFile(workbook, `${name}.xlsx`, { compression: true })
+  }
+  
+  const getFilteredData = useCallback(() => {
+    const data = []
+    gridRef.current.api.forEachNodeAfterFilter(node => data.push(node.data))
+    exportExcelFile(data, raporName)
+  }, [raporName]);
+
   return (
     <>
         <div>
@@ -121,9 +136,11 @@ function DetayTablo() {
           </select>
         </div>
         <h2>{raporName}</h2>
+        <button onClick={() => getFilteredData()}>Rapour İndir</button>
         {detayRaporu.length > 0 && 
         <div style={{height: 600}}>
           <AgGridReact 
+            ref={gridRef}
             pagination={true}
             paginationPageSize={50}
             paginationPageSizeSelector={[50, 100, 200]}
