@@ -120,7 +120,9 @@ function DetayTablo() {
             defaultValue={""}
             onChange={(event) => {
               if (cachedRapor[event.target.value]) {
+                const findRaporName = butonlar.find(buton => buton.sorgu === event.target.value)
                 setDetayRaporu(cachedRapor[event.target.value])
+                setRaporName(findRaporName.butonAdi)
                 return;
               }
               fetchDetayRaporu(event.target.value)
